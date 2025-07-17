@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources Monitor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: transparent;
+      color: #ffffff;
+    }
+  
+  .resources-header {
+    font-size: 1rem;
+	text-align: left;
+    padding-top: 1.1rem;
+	padding-bottom: 0.1rem;
+	padding-left: 0.2rem;
+	}
+  .widget-style
+	#border-radius: 12px;
+    #box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+	#backdrop-filter: blur(10px);
+    #background: rgba(255, 255, 255, 0.05);
+    }
+	</style>
+</head>
+<body>
+
+<div style="padding-top: "0rem";>CPU</div>
+  <iframe
+  src="http://192.168.68.101:6510?graph=cpu&showPercentage=true&color=ff3748&surface=ffffff33&innerRadius=12&textSize=18"
+  style="border-radius: "12px"; height="150px"; width="250px"; allowtransparency="true"
+  frameborder="5">
+</iframe>
+
+  <div class="resources-header">Memory </div>
+  <iframe 
+  src="http://192.168.68.101:6510/?graph=ram&showPercentage=true&color=7FFFFF&surface=ffffff33&innerRadius=12&textSize=18"
+  style="border-radius: "12px"; height="150px"; width="250px"; allowtransparency="true"
+  frameborder="3">
+ </iframe> 
+
+  <div class="resources-header">Network</div>
+  <iframe 
+  src="http://192.168.68.101:6510/?graph=network&showPercentage=true&gap=1&color=7FFFFF&surface=fffff333&innerRadius=12&gap=12&textSize=18" 
+  style="border-radius: "12px"; height="100px"; width="250px"; allowtransparency="true"
+  frameborder="2">
+  </iframe>
+  
+  <div class="resources-header">Storage</div>
+  <iframe 
+  src="http://192.168.68.101:6510/?graph=storage&gap=4&multiView=true&showPercentage=true&color=7FFFFF&surface=ffffff33&innerRadius=12&textSize=18"" 
+  style="border-radius: "12px"; height="200px"; width="250px"; allowtransparency="true"
+  frameborder="1">
+  </iframe>
+
+</body>
+</html>
+

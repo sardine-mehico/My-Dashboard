@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard</title>
+	<link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: auto;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: 224px repeat(3, 250px); /* Reduced first row height by 20% */
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.1);
+            /*  backdrop-filter: blur(10px);  */
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            color: white;
+            /*  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);  */
+			box-shadow: 0 8px 32px 0 rgb(0 0 0 / 30%);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
+        }
+
+        .widget h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            text-align: center;
+            
+        }
+
+        /* Widget 1 - Time */
+        .time-widget {
+            grid-column: 1;
+            grid-row: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* padding: 30px 25px; */
+            /* Removed backdrop-filter and box-shadow */
+        }
+
+        .main-time {
+            font-size: 3.5rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .main-date {
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        .time-separator {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-bottom: 10px;
+        }
+
+        .world-times {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .world-time {
+            flex: 1;
+            text-align: center;
+        }
+
+        .world-time .city {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .world-time .time {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Widget 2 - Weather */
+        .weather-widget {
+            grid-column: 2 / 4;
+            grid-row: 1;
+            /* Removed backdrop-filter and box-shadow */
+        }
+
+        .weather-location {
+            display: flex;
+            align-items: center;
+            /*  justify-content: center;  */
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .location-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            opacity: 0.9;
+        }
+
+        .weather-forecast {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 160px;
+            padding: 0 10px;
+        }
+
+        .forecast-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            text-align: center;
+        }
+
+        .forecast-day-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .forecast-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .forecast-temp {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Widget 4 - iframe */
+        .iframe-widget {
+            grid-column: 4; /* Moved to column 4 */
+            grid-row: 1 / 5; /* Spans row 1 to row 4 */
+            width: 95%;
+            height: 100%; /* Let grid handle height */
+            padding: 10px;
+        }
+
+        .iframe-widget iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden; /* Hide scrollbars */
+        }
+
+        /* Widget 5 - Quick Access */
+        .quick-access-widget {
+            grid-column: 1 / 4; /* Spans columns 1 to 3 */
+            grid-row: 2 / 5; /* Adjusted to start from row 2 */
+        }
+
+        .quick-access-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .addLinkBtn { /* Updated class name */
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .addLinkBtn:hover {
+            background: rgba(255, 255, 255, 0.1); /* A subtle hover effect */
+            transform: scale(1.1);
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+          /*  height: calc(100% - 60px);  */
+        }
+
+        .shortcut-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            padding: 20px 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            height: fit-content;
+            cursor: grab; /* Indicate draggable */
+        }
+
+        .shortcut-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .shortcut-item.dragging {
+            opacity: 0.5;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+        }
+
+        .shortcut-item.drag-over {
+            border: 2px solid rgba(255, 255, 255, 0.8); /* Visual feedback for drag target */
+        }
+
+        .shortcut-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            object-fit: cover;
+        }
+
+        .shortcut-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .delete-shortcut {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.7);
+            border: none;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+        }
+
+        .shortcut-item:hover .delete-shortcut {
+            display: block;
+        }
+
+        /* Settings Button */
+        .settings-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 42px;
+            height: 42px;
+            background: #ffffff1a;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .2);
+            border-radius: 50%;
+            color: #ffffffe6;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s cubic-bezier(.4,0,.2,1);
+            z-index: 9999; /* Increased z-index */
+            box-shadow: 0 8px 32px #0000001a;
+        }
+
+        .settings-button:hover {
+            transform: scale(1.1);
+        }
+
+        .settings-button:hover .settings-icon {
+            transform: rotate(90deg);
+        }
+
+        .settings-icon {
+            width: 28px; /* Adjusted to match new SVG size */
+            height: 28px; /* Adjusted to match new SVG size */
+            transition: transform 0.3s ease;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 600px;
+            max-width: 90vw;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group select {
+            color: #ccc; /* Changed dropdown text color to grey */
+        }
+
+        .form-group select option {
+            background: #2d3748;
+            color: white;
+        }
+
+        .city-search-group {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .city-search-group input {
+            flex: 1;
+        }
+
+        .search-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .color-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-input {
+            flex: 1;
+        }
+
+        .color-input input[type="color"] {
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: rgba(0, 123, 255, 0.8);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(108, 117, 125, 0.8);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        .error {
+            color: #ff6b6b;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .wallpaper-options {
+            display: none;
+        }
+
+        .wallpaper-options.active {
+            display: block;
+        }
+
+        .timezone-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .export-import-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            
+            .time-widget,
+            .weather-widget,
+            .iframe-widget,
+            .quick-access-widget {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            
+            .iframe-widget {
+                width: 100%;
+                height: 400px;
+            }
+
+            .weather-forecast {
+                flex-direction: column;
+                gap: 10px;
+                height: auto;
+            }
+
+            .forecast-day {
+                flex-direction: row;
+                justify-content: space-between;
+                width: 100%;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+            }
+
+            .settings-button {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .settings-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .modal-content {
+                width: 95vw;
+                margin: 5% auto;
+            }
+
+            .main-time {
+                font-size: 2.5rem;
+            }
+
+            .world-times {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .city-search-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .timezone-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .export-import-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Widget 1: Time -->
+        <div class="widget time-widget">
+            <div class="main-time" id="mainTime"></div>
+            <div class="main-date" id="mainDate"></div>
+            <div class="time-separator"></div>
+            <div class="world-times">
+                <div class="world-time">
+                    <div class="city" id="timezone1City"></div>
+                    <div class="time" id="timezone1Time"></div>
+                </div>
+                <div class="world-time">
+                    <div class="city" id="timezone2City"></div>
+                    <div class="time" id="timezone2Time"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Widget 2: Weather -->
+        <div class="widget weather-widget">
+            <div id="weatherContent">
+                <div class="loading">Loading weather...</div>
+            </div>
+        </div>
+
+        <!-- Widget 4: iframe -->
+        <div class="widget iframe-widget">
+            <h2>System Resources</h2>
+            <iframe src="https://www.google.com" title="System Resources" scrolling="no"></iframe>
+        </div>
+
+        <!-- Widget 5: Quick Access -->
+        <div class="widget quick-access-widget">
+            <div class="quick-access-header">
+                <h2>Quick Access</h2>
+                <button class="addLinkBtn" onclick="openAddShortcutModal()" title="Add Shortcut">+</button>
+            </div>
+            <div class="shortcuts-grid" id="shortcutsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Settings Button -->
+    <button class="settings-button" onclick="openSettingsModal()" title="Settings">
+        <svg class="settings-icon" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></path>
+        </svg>
+    </button>
+
+    <!-- Add Shortcut Modal -->
+    <div id="addShortcutModal" class="modal">
+        <div class="modal-content">
+            <h3>Add New Shortcut</h3>
+            <form id="shortcutForm">
+                <div class="form-group">
+                    <label for="shortcutName">Name:</label>
+                    <input type="text" id="shortcutName" placeholder="Enter shortcut name" required>
+                </div>
+                <div class="form-group">
+                    <label for="shortcutUrl">URL:</label>
+                    <input type="url" id="shortcutUrl" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="shortcutIcon">Icon URL:</label>
+                    <input type="url" id="shortcutIcon" placeholder="https://example.com/icon.png">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddShortcutModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Shortcut</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h3>Dashboard Settings</h3>
+            
+            <div class="form-group">
+                <label for="iframeUrl">System Resources URL:</label>
+                <input type="url" id="iframeUrl" placeholder="https://example.com" value="https://www.google.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="weatherApiKey">OpenWeatherMap API Key:</label>
+                <input type="text" id="weatherApiKey" placeholder="Enter your API key">
+            </div>
+
+            <div class="form-group">
+                <label>Weather City:</label>
+                <div class="city-search-group">
+                    <input type="text" id="cityInput" placeholder="Enter city name" value="London">
+                    <button type="button" class="search-btn" onclick="searchWeather()">Update</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Timezone Selection:</label>
+                <div class="timezone-grid">
+                    <div>
+                        <label for="timezone1Select">Timezone 1:</label>
+                        <select id="timezone1Select" onchange="updateTimezones()">
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="timezone2Select">Timezone 2:</label>
+                        <select id="timezone2Select" onchange="updateTimezones()">
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="dateFormat">Date Format:</label>
+                <select id="dateFormat" onchange="updateDateFormat()">
+                    <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                    <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="wallpaperType">Background Type:</label>
+                <select id="wallpaperType" onchange="toggleWallpaperOptions()">
+                    <option value="gradient">Gradient</option>
+                    <option value="color">Solid Color</option>
+                    <option value="image">Image</option>
+                </select>
+            </div>
+
+            <div id="gradientOptions" class="wallpaper-options active">
+                <div class="form-group">
+                    <label>Gradient Colors:</label>
+                    <div class="color-inputs">
+                        <div class="color-input">
+                            <label for="gradientColor1">Color 1:</label>
+                            <input type="color" id="gradientColor1" value="#667eea">
+                        </div>
+                        <div class="color-input">
+                            <label for="gradientColor2">Color 2:</label>
+                            <input type="color" id="gradientColor2" value="#764ba2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="colorOptions" class="wallpaper-options">
+                <div class="form-group">
+                    <label for="solidColor">Background Color:</label>
+                    <input type="color" id="solidColor" value="#667eea">
+                </div>
+            </div>
+
+            <div id="imageOptions" class="wallpaper-options">
+                <div class="form-group">
+                    <label for="imageUrl">Image URL:</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+                </div>
+            </div>
+
+            <div class="export-import-buttons">
+                <button type="button" class="btn btn-secondary" onclick="exportSettings()">Export Settings</button>
+                <button type="button" class="btn btn-secondary" onclick="importSettings()">Import Settings</button>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn btn-secondary" onclick="closeSettingsModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal for Shortcut Deletion -->
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this shortcut?</p>
+            <div class="modal-buttons">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmDeleteBtn">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let weatherApiKey = localStorage.getItem('weatherApiKey') || '';
+        let currentCity = localStorage.getItem('currentCity') || 'London';
+        let selectedDateFormat = localStorage.getItem('selectedDateFormat') || 'dd/mm/yyyy';
+
+        // World cities with timezones
+        const worldCities = [
+            { name: 'Afghanistan/Kabul', timezone: 'Asia/Kabul' },
+            { name: 'Albania/Tirana', timezone: 'Europe/Tirane' },
+            { name: 'Algeria/Algiers', timezone: 'Africa/Algiers' },
+            { name: 'Argentina/Buenos Aires', timezone: 'America/Argentina/Buenos_Aires' },
+            { name: 'Australia/Adelaide', timezone: 'Australia/Adelaide' },
+            { name: 'Australia/Brisbane', timezone: 'Australia/Brisbane' },
+            { name: 'Australia/Darwin', timezone: 'Australia/Darwin' },
+            { name: 'Australia/Melbourne', timezone: 'Australia/Melbourne' },
+            { name: 'Australia/Perth', timezone: 'Australia/Perth' },
+            { name: 'Australia/Sydney', timezone: 'Australia/Sydney' },
+            { name: 'Austria/Vienna', timezone: 'Europe/Vienna' },
+            { name: 'Bangladesh/Dhaka', timezone: 'Asia/Dhaka' },
+            { name: 'Belgium/Brussels', timezone: 'Europe/Brussels' },
+            { name: 'Brazil/Rio de Janeiro', timezone: 'America/Sao_Paulo' },
+            { name: 'Brazil/São Paulo', timezone: 'America/Sao_Paulo' },
+            { name: 'Canada/Montreal', timezone: 'America/Montreal' },
+            { name: 'Canada/Toronto', timezone: 'America/Toronto' },
+            { name: 'Canada/Vancouver', timezone: 'America/Vancouver' },
+            { name: 'Chile/Santiago', timezone: 'America/Santiago' },
+            { name: 'China/Beijing', timezone: 'Asia/Shanghai' },
+            { name: 'China/Hong Kong', timezone: 'Asia/Hong_Kong' },
+            { name: 'China/Shanghai', timezone: 'Asia/Shanghai' },
+            { name: 'Colombia/Bogotá', timezone: 'America/Bogota' },
+            { name: 'Czech Republic/Prague', timezone: 'Europe/Prague' },
+            { name: 'Denmark/Copenhagen', timezone: 'Europe/Copenhagen' },
+            { name: 'Egypt/Cairo', timezone: 'Africa/Cairo' },
+            { name: 'Finland/Helsinki', timezone: 'Europe/Helsinki' },
+            { name: 'France/Paris', timezone: 'Europe/Paris' },
+            { name: 'Germany/Berlin', timezone: 'Europe/Berlin' },
+            { name: 'Germany/Munich', timezone: 'Europe/Berlin' },
+            { name: 'Greece/Athens', timezone: 'Europe/Athens' },
+            { name: 'India/Bangalore', timezone: 'Asia/Kolkata' },
+            { name: 'India/Chennai', timezone: 'Asia/Kolkata' },
+            { name: 'India/Delhi', timezone: 'Asia/Kolkata' },
+            { name: 'India/Kolkata', timezone: 'Asia/Kolkata' },
+            { name: 'India/Mumbai', timezone: 'Asia/Kolkata' },
+            { name: 'Indonesia/Jakarta', timezone: 'Asia/Jakarta' },
+            { name: 'Iran/Tehran', timezone: 'Asia/Tehran' },
+            { name: 'Iraq/Baghdad', timezone: 'Asia/Baghdad' },
+            { name: 'Ireland/Dublin', timezone: 'Europe/Dublin' },
+            { name: 'Israel/Jerusalem', timezone: 'Asia/Jerusalem' },
+            { name: 'Italy/Milan', timezone: 'Europe/Rome' },
+            { name: 'Italy/Rome', timezone: 'Europe/Rome' },
+            { name: 'Japan/Osaka', timezone: 'Asia/Tokyo' },
+            { name: 'Japan/Tokyo', timezone: 'Asia/Tokyo' },
+            { name: 'Jordan/Amman', timezone: 'Asia/Amman' },
+            { name: 'Kenya/Nairobi', timezone: 'Africa/Nairobi' },
+            { name: 'Malaysia/Kuala Lumpur', timezone: 'Asia/Kuala_Lumpur' },
+            { name: 'Mexico/Mexico City', timezone: 'America/Mexico_City' },
+            { name: 'Netherlands/Amsterdam', timezone: 'Europe/Amsterdam' },
+            { name: 'New Zealand/Auckland', timezone: 'Pacific/Auckland' },
+            { name: 'Nigeria/Lagos', timezone: 'Africa/Lagos' },
+            { name: 'Norway/Oslo', timezone: 'Europe/Oslo' },
+            { name: 'Pakistan/Karachi', timezone: 'Asia/Karachi' },
+            { name: 'Peru/Lima', timezone: 'America/Lima' },
+            { name: 'Philippines/Manila', timezone: 'Asia/Manila' },
+            { name: 'Poland/Warsaw', timezone: 'Europe/Warsaw' },
+            { name: 'Portugal/Lisbon', timezone: 'Europe/Lisbon' },
+            { name: 'Russia/Moscow', timezone: 'Europe/Moscow' },
+            { name: 'Russia/St. Petersburg', timezone: 'Europe/Moscow' },
+            { name: 'Saudi Arabia/Riyadh', timezone: 'Asia/Riyadh' },
+            { name: 'Singapore/Singapore', timezone: 'Asia/Singapore' },
+            { name: 'South Africa/Cape Town', timezone: 'Africa/Johannesburg' },
+            { name: 'South Africa/Johannesburg', timezone: 'Africa/Johannesburg' },
+            { name: 'South Korea/Seoul', timezone: 'Asia/Seoul' },
+            { name: 'Spain/Barcelona', timezone: 'Europe/Madrid' },
+            { name: 'Spain/Madrid', timezone: 'Europe/Madrid' },
+            { name: 'Sweden/Stockholm', timezone: 'Europe/Stockholm' },
+            { name: 'Switzerland/Geneva', timezone: 'Europe/Zurich' },
+            { name: 'Switzerland/Zurich', timezone: 'Europe/Zurich' },
+            { name: 'Thailand/Bangkok', timezone: 'Asia/Bangkok' },
+            { name: 'Turkey/Istanbul', timezone: 'Europe/Istanbul' },
+            { name: 'UAE/Dubai', timezone: 'Asia/Dubai' },
+            { name: 'UK/Edinburgh', timezone: 'Europe/London' },
+            { name: 'UK/London', timezone: 'Europe/London' },
+            { name: 'Ukraine/Kiev', timezone: 'Europe/Kiev' },
+            { name: 'USA/Chicago', timezone: 'America/Chicago' },
+            { name: 'USA/Denver', timezone: 'America/Denver' },
+            { name: 'USA/Los Angeles', timezone: 'America/Los_Angeles' },
+            { name: 'USA/Miami', timezone: 'America/New_York' },
+            { name: 'USA/New York', timezone: 'America/New_York' },
+            { name: 'USA/San Francisco', timezone: 'America/Los_Angeles' },
+            { name: 'USA/Seattle', timezone: 'America/Los_Angeles' },
+            { name: 'Venezuela/Caracas', timezone: 'America/Caracas' },
+            { name: 'Vietnam/Ho Chi Minh City', timezone: 'Asia/Ho_Chi_Minh' }
+        ];
+
+        let selectedTimezones = JSON.parse(localStorage.getItem('selectedTimezones')) || {
+            timezone1: { name: 'USA/New York', timezone: 'America/New_York' },
+            timezone2: { name: 'UK/London', timezone: 'Europe/London' }
+        };
+
+        // Populate timezone dropdowns
+        function populateTimezoneDropdowns() {
+            const timezone1Select = document.getElementById('timezone1Select');
+            const timezone2Select = document.getElementById('timezone2Select');
+            
+            // Clear existing options
+            timezone1Select.innerHTML = '';
+            timezone2Select.innerHTML = '';
+            
+            // Add options to both dropdowns
+            worldCities.forEach(city => {
+                const option1 = document.createElement('option');
+                option1.value = JSON.stringify(city);
+                option1.textContent = city.name;
+                if (city.name === selectedTimezones.timezone1.name) {
+                    option1.selected = true;
+                }
+                timezone1Select.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = JSON.stringify(city);
+                option2.textContent = city.name;
+                if (city.name === selectedTimezones.timezone2.name) {
+                    option2.selected = true;
+                }
+                timezone2Select.appendChild(option2);
+            });
+        }
+
+        // Update timezones when selection changes
+        function updateTimezones() {
+            const timezone1Data = JSON.parse(document.getElementById('timezone1Select').value);
+            const timezone2Data = JSON.parse(document.getElementById('timezone2Select').value);
+            
+            selectedTimezones = {
+                timezone1: timezone1Data,
+                timezone2: timezone2Data
+            };
+            
+            localStorage.setItem('selectedTimezones', JSON.stringify(selectedTimezones));
+            updateTimeDisplay();
+        }
+
+        // Update date format when selection changes
+        function updateDateFormat() {
+            selectedDateFormat = document.getElementById('dateFormat').value;
+            localStorage.setItem('selectedDateFormat', selectedDateFormat);
+            updateTime(); // Re-render time to apply new format
+        }
+
+        // Time Widget
+        function updateTime() {
+            const now = new Date();
+            
+            // Main time (local)
+            const mainTime = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            let day = String(now.getDate()).padStart(2, '0');
+            let month = String(now.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+            let year = now.getFullYear();
+
+            let formattedDate;
+            if (selectedDateFormat === 'dd/mm/yyyy') {
+                formattedDate = `${day}/${month}/${year}`;
+            } else { // mm/dd/yyyy
+                formattedDate = `${month}/${day}/${year}`;
+            }
+
+            const mainDateFull = now.toLocaleDateString('en-US', { weekday: 'long' }) + ', ' + formattedDate;
+            
+            document.getElementById('mainTime').textContent = mainTime;
+            document.getElementById('mainDate').textContent = mainDateFull;
+            
+            updateTimeDisplay();
+        }
+
+        function updateTimeDisplay() {
+            const now = new Date();
+            
+            // Timezone 1
+            const timezone1Time = now.toLocaleTimeString('en-US', {
+                timeZone: selectedTimezones.timezone1.timezone,
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('timezone1Time').textContent = timezone1Time;
+            // Extract just the city name for display
+            const tz1CityName = selectedTimezones.timezone1.name.includes('/') ? selectedTimezones.timezone1.name.split('/')[1] : selectedTimezones.timezone1.name;
+            document.getElementById('timezone1City').textContent = tz1CityName;
+            
+            // Timezone 2
+            const timezone2Time = now.toLocaleTimeString('en-US', {
+                timeZone: selectedTimezones.timezone2.timezone,
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('timezone2Time').textContent = timezone2Time;
+            // Extract just the city name for display
+            const tz2CityName = selectedTimezones.timezone2.name.includes('/') ? selectedTimezones.timezone2.name.split('/')[1] : selectedTimezones.timezone2.name;
+            document.getElementById('timezone2City').textContent = tz2CityName;
+        }
+
+        // Weather Functions
+        function searchWeather() {
+            const cityName = document.getElementById('cityInput').value.trim();
+            if (cityName) {
+                currentCity = cityName;
+                localStorage.setItem('currentCity', currentCity);
+                loadWeather(cityName);
+            }
+        }
+
+        async function loadWeather(cityName = currentCity) {
+            try {
+                if (!weatherApiKey) {
+                    displayMockWeather(cityName);
+                    return;
+                }
+
+                const response = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=${weatherApiKey}&units=metric`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`Weather API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayWeatherData(data);
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                document.getElementById('weatherContent').innerHTML = `
+                    <div class="error">
+                        Unable to fetch weather for "${cityName}". 
+                        ${!weatherApiKey ? 'Please add API key in settings.' : 'Please check city name and try again.'}
+                    </div>
+                `;
+            }
+        }
+
+        function displayMockWeather(cityName) {
+            const mockData = {
+                city: cityName,
+                forecast: [
+                    { day: 'Today', temp: '18°C', icon: '02d', desc: 'Partly Cloudy' },
+                    { day: 'Tomorrow', temp: '20°C', icon: '02d', desc: 'Partly Sunny' },
+                    { day: 'Wed', temp: '15°C', icon: '10d', desc: 'Rainy' },
+                    { day: 'Thu', temp: '22°C', icon: '01d', desc: 'Sunny' },
+                    { day: 'Fri', temp: '12°C', icon: '10d', desc: 'Rainy' }
+                ]
+            };
+
+            const weatherHTML = `
+                <div class="weather-location">
+                    <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    ${mockData.city}
+                </div>
+                <div class="weather-forecast">
+                    ${mockData.forecast.map(day => `
+                        <div class="forecast-day">
+                            <div class="forecast-day-name">${day.day}</div>
+                            <img class="forecast-icon" src="https://openweathermap.org/img/wn/${day.icon}@2x.png" alt="${day.desc}">
+                            <div class="forecast-temp">${day.temp}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('weatherContent').innerHTML = weatherHTML;
+        }
+
+        function displayWeatherData(data) {
+            const city = data.city.name + (data.city.country ? `, ${data.city.country}` : '');
+            const dailyForecasts = [];
+            
+            // Group forecasts by day and get one per day
+            const today = new Date().getDate();
+            const processedDays = new Set();
+            
+            for (let i = 0; i < data.list.length && dailyForecasts.length < 5; i++) {
+                const forecast = data.list[i];
+                const date = new Date(forecast.dt * 1000);
+                const day = date.getDate();
+                
+                if (!processedDays.has(day)) {
+                    processedDays.add(day);
+                    const dayName = day === today ? 'Today' : 
+                                   day === today + 1 ? 'Tomorrow' : 
+                                   date.toLocaleDateString('en-US', { weekday: 'short' });
+                    
+                    dailyForecasts.push({
+                        day: dayName,
+                        temp: `${Math.round(forecast.main.temp)}°C`,
+                        icon: forecast.weather[0].icon,
+                        desc: forecast.weather[0].description
+                    });
+                }
+            }
+
+            const weatherHTML = `
+                <div class="weather-location">
+                    <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    ${city}
+                </div>
+                <div class="weather-forecast">
+                    ${dailyForecasts.map(day => `
+                        <div class="forecast-day">
+                            <div class="forecast-day-name">${day.day}</div>
+                            <img class="forecast-icon" src="https://openweathermap.org/img/wn/${day.icon}@2x.png" alt="${day.desc}">
+                            <div class="forecast-temp">${day.temp}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('weatherContent').innerHTML = weatherHTML;
+        }
+
+        // Quick Access Widget
+        let shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || [
+            { name: 'Google', url: 'https://google.com', icon: 'https://www.google.com/favicon.ico' },
+            { name: 'GitHub', url: 'https://github.com', icon: 'https://github.com/favicon.ico' },
+            { name: 'YouTube', url: 'https://youtube.com', icon: 'https://www.youtube.com/favicon.ico' }
+        ];
+
+        function saveShortcuts() {
+            localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+        }
+
+        let draggedItem = null; // To store the currently dragged shortcut item
+
+        function renderShortcuts() {
+            const grid = document.getElementById('shortcutsGrid');
+            grid.innerHTML = shortcuts.map((shortcut, index) => `
+                <a href="${shortcut.url}" target="_blank" class="shortcut-item" draggable="true" data-index="${index}">
+                    <img src="${shortcut.icon}" alt="${shortcut.name}" class="shortcut-icon" 
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iMTIiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSIxMiIgeT0iMTIiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CjxwYXRoIGQ9Im0zIDkgOS03IDkgNy05IDEzLTkgN3oiLz4KPC9zdmc+Cjwvc3ZnPgo='">
+                    <div class="shortcut-name">${shortcut.name}</div>
+                    <button class="delete-shortcut" onclick="confirmDeleteShortcut(${index}); event.preventDefault();">×</button>
+                </a>
+            `).join('');
+
+            // Add drag and drop event listeners after rendering
+            document.querySelectorAll('.shortcut-item').forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('dragleave', handleDragLeave);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.classList.add('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault(); // Necessary to allow dropping
+            e.dataTransfer.dropEffect = 'move';
+            if (this !== draggedItem) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave() {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            this.classList.remove('drag-over');
+
+            if (this !== draggedItem) {
+                const fromIndex = parseInt(draggedItem.dataset.index);
+                const toIndex = parseInt(this.dataset.index);
+
+                const [removed] = shortcuts.splice(fromIndex, 1);
+                shortcuts.splice(toIndex, 0, removed);
+
+                saveShortcuts();
+                renderShortcuts(); // Re-render to reflect new order
+            }
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.shortcut-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+            draggedItem = null;
+        }
+
+
+        function openAddShortcutModal() {
+            document.getElementById('addShortcutModal').style.display = 'block';
+        }
+
+        function closeAddShortcutModal() {
+            document.getElementById('addShortcutModal').style.display = 'none';
+            document.getElementById('shortcutForm').reset();
+        }
+
+        let shortcutToDeleteIndex = -1; // To store the index of the shortcut to be deleted
+
+        function confirmDeleteShortcut(index) {
+            shortcutToDeleteIndex = index;
+            document.getElementById('confirmDeleteModal').style.display = 'block';
+        }
+
+        function closeConfirmDeleteModal() {
+            document.getElementById('confirmDeleteModal').style.display = 'none';
+            shortcutToDeleteIndex = -1; // Reset index
+        }
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (shortcutToDeleteIndex !== -1) {
+                shortcuts.splice(shortcutToDeleteIndex, 1);
+                saveShortcuts();
+                renderShortcuts();
+                closeConfirmDeleteModal();
+            }
+        });
+
+        // Wallpaper Functions
+        function toggleWallpaperOptions() {
+            const type = document.getElementById('wallpaperType').value;
+            document.querySelectorAll('.wallpaper-options').forEach(el => el.classList.remove('active'));
+            document.getElementById(type + 'Options').classList.add('active');
+        }
+
+        function applyWallpaper() {
+            const settings = JSON.parse(localStorage.getItem('wallpaperSettings') || '{}');
+            const body = document.body;
+            
+            // Reset all background-related styles
+            body.style.background = '';
+            body.style.backgroundImage = '';
+            body.style.backgroundColor = '';
+            body.style.filter = 'none'; 
+            body.style.transform = 'none';
+
+            if (settings.type === 'color') {
+                body.style.background = settings.color || '#667eea'; // Changed from backgroundColor to background
+            } else if (settings.type === 'gradient') {
+                const color1 = settings.gradientColor1 || '#667eea';
+                const color2 = settings.gradientColor2 || '#764ba2';
+                body.style.background = `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
+            } else if (settings.type === 'image' && settings.imageUrl) {
+                body.style.background = `url('${settings.imageUrl}') center/cover no-repeat`;
+                body.style.backgroundSize = 'cover'; // Ensure image covers the background
+            }
+        }
+
+        // Settings Modal Functions
+        function openSettingsModal() {
+            console.log('Attempting to open settings modal.'); // Debugging log
+            const settingsModal = document.getElementById('settingsModal');
+            if (settingsModal) {
+                settingsModal.style.display = 'block';
+                console.log('Settings modal display set to block.'); // Debugging log
+            } else {
+                console.error('Settings modal element not found!'); // Debugging log
+            }
+            
+            // Load current settings
+            const currentIframeUrl = document.querySelector('.iframe-widget iframe').src;
+            document.getElementById('iframeUrl').value = currentIframeUrl;
+            document.getElementById('weatherApiKey').value = weatherApiKey;
+            document.getElementById('cityInput').value = currentCity;
+            
+            // Populate timezone dropdowns
+            populateTimezoneDropdowns();
+            
+            // Load date format
+            document.getElementById('dateFormat').value = selectedDateFormat;
+
+            // Load wallpaper settings
+            const wallpaperSettings = JSON.parse(localStorage.getItem('wallpaperSettings') || '{}');
+            document.getElementById('wallpaperType').value = wallpaperSettings.type || 'gradient';
+            document.getElementById('gradientColor1').value = wallpaperSettings.gradientColor1 || '#667eea';
+            document.getElementById('gradientColor2').value = wallpaperSettings.gradientColor2 || '#764ba2';
+            document.getElementById('solidColor').value = wallpaperSettings.color || '#667eea';
+            document.getElementById('imageUrl').value = wallpaperSettings.imageUrl || '';
+            
+            toggleWallpaperOptions();
+        }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function saveSettings() {
+            const iframeUrl = document.getElementById('iframeUrl').value;
+            const apiKey = document.getElementById('weatherApiKey').value;
+            const cityName = document.getElementById('cityInput').value.trim();
+            
+            // Update iframe URL
+            if (iframeUrl) {
+                document.querySelector('.iframe-widget iframe').src = iframeUrl;
+                localStorage.setItem('iframeUrl', iframeUrl);
+            }
+            
+            // Save weather API key
+            if (apiKey !== weatherApiKey) {
+                weatherApiKey = apiKey;
+                localStorage.setItem('weatherApiKey', apiKey);
+            }
+            
+            // Save and update weather city
+            if (cityName && cityName !== currentCity) {
+                currentCity = cityName;
+                localStorage.setItem('currentCity', currentCity);
+                loadWeather(currentCity);
+            } else if (!cityName && currentCity) { // If city name is cleared, revert to default or handle
+                currentCity = 'London'; // Or some other default
+                localStorage.setItem('currentCity', currentCity);
+                loadWeather(currentCity);
+            }
+            
+            // Save wallpaper settings
+            const wallpaperSettings = {
+                type: document.getElementById('wallpaperType').value,
+                gradientColor1: document.getElementById('gradientColor1').value,
+                gradientColor2: document.getElementById('gradientColor2').value,
+                color: document.getElementById('solidColor').value,
+                imageUrl: document.getElementById('imageUrl').value,
+            };
+            
+            localStorage.setItem('wallpaperSettings', JSON.stringify(wallpaperSettings));
+            applyWallpaper();
+            
+            closeSettingsModal();
+        }
+
+        // Export Settings Function
+        function exportSettings() {
+            const settings = {
+                weatherApiKey: localStorage.getItem('weatherApiKey'),
+                currentCity: localStorage.getItem('currentCity'),
+                selectedTimezones: localStorage.getItem('selectedTimezones'),
+                selectedDateFormat: localStorage.getItem('selectedDateFormat'),
+                shortcuts: localStorage.getItem('shortcuts'),
+                wallpaperSettings: localStorage.getItem('wallpaperSettings'),
+                iframeUrl: localStorage.getItem('iframeUrl')
+            };
+
+            const dataStr = JSON.stringify(settings, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'dashboard_settings.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Import Settings Function
+        function importSettings() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    try {
+                        const reader = new FileReader();
+                        reader.onload = async (e) => {
+                            const importedSettings = JSON.parse(e.target.result);
+                            
+                            // Apply imported settings to localStorage
+                            for (const key in importedSettings) {
+                                if (importedSettings[key] !== null) {
+                                    localStorage.setItem(key, importedSettings[key]);
+                                } else {
+                                    localStorage.removeItem(key); // Clear if null
+                                }
+                            }
+                            
+                            // Re-initialize dashboard to apply new settings
+                            weatherApiKey = localStorage.getItem('weatherApiKey') || '';
+                            currentCity = localStorage.getItem('currentCity') || 'London';
+                            selectedDateFormat = localStorage.getItem('selectedDateFormat') || 'dd/mm/yyyy';
+                            selectedTimezones = JSON.parse(localStorage.getItem('selectedTimezones')) || {
+                                timezone1: { name: 'USA/New York', timezone: 'America/New_York' },
+                                timezone2: { name: 'UK/London', timezone: 'Europe/London' }
+                            };
+                            shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || [
+                                { name: 'Google', url: 'https://google.com', icon: 'https://www.google.com/favicon.ico' },
+                                { name: 'GitHub', url: 'https://github.com', icon: 'https://github.com/favicon.ico' },
+                                { name: 'YouTube', url: 'https://www.youtube.com/favicon.ico' }
+                            ];
+
+                            initDashboard();
+                            closeSettingsModal();
+                            alert('Settings imported successfully!');
+                        };
+                        reader.readAsText(file);
+                    } catch (error) {
+                        console.error('Error importing settings:', error);
+                        alert('Failed to import settings. Please ensure it is a valid JSON file.');
+                    }
+                }
+            };
+            input.click();
+        }
+
+
+        document.getElementById('shortcutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('shortcutName').value;
+            const url = document.getElementById('shortcutUrl').value;
+            const icon = document.getElementById('shortcutIcon').value || `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=48`;
+            
+            shortcuts.push({ name, url, icon });
+            saveShortcuts();
+            renderShortcuts();
+            closeAddShortcutModal();
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const addModal = document.getElementById('addShortcutModal');
+            const settingsModal = document.getElementById('settingsModal');
+            const confirmModal = document.getElementById('confirmDeleteModal');
+            if (event.target === addModal) {
+                closeAddShortcutModal();
+            }
+            if (event.target === settingsModal) {
+                closeSettingsModal();
+            }
+            if (event.target === confirmModal) {
+                closeConfirmDeleteModal();
+            }
+        }
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            renderShortcuts();
+            
+            // Load saved iframe URL
+            const savedIframeUrl = localStorage.getItem('iframeUrl');
+            if (savedIframeUrl) {
+                document.querySelector('.iframe-widget iframe').src = savedIframeUrl;
+            }
+
+            // Load saved API key and city
+            weatherApiKey = localStorage.getItem('weatherApiKey') || '';
+            currentCity = localStorage.getItem('currentCity') || 'London';
+            
+            // Load weather for saved city
+            loadWeather(currentCity);
+            
+            // Apply saved wallpaper
+            applyWallpaper();
+        }
+
+        // Start dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>
