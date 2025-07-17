@@ -22,6 +22,8 @@
 8. Choose wallpaper/background for your dashboard.
 9. Add all your apps to Quick Links on Dashboard.
 
+Tip: get icons from https://dashboardicons.com
+
 That's it, you're rolling. 
 
 Feel free to fork it, modify the 'My Dashboard' page & add cool things (calendar, docker stats, rss feeds and so on).
