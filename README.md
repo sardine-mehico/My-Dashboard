@@ -1,4 +1,4 @@
-<img width="1603" height="917" alt="image" src="https://github.com/user-attachments/assets/b303a4ff-2812-4855-bbff-d11589a50d6b" /># My-Dashboard
+<h2>My Dashboard</h2>h2>
 A light-weight Dashboard for your Homeserver.
 
 <img width="1603" height="917" alt="image" src="https://github.com/user-attachments/assets/181796e0-f219-4598-a492-ba696541fb03" />
