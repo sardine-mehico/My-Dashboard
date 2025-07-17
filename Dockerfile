@@ -1,6 +1,8 @@
 FROM lipanski/docker-static-website:latest
 
-COPY . .
+COPY Dashboard.html index.html
+
+COPY system-resources.html system-resources.html
 
 EXPOSE 3000
 
