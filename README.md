@@ -1,7 +1,5 @@
-<h2>My Dashboard</h2> A light-weight Dashboard.
-
-
-
+<h2>My Dashboard</h2> 
+<h4>A light-weight HTML based Dashboard.</h4>
 
 <img width="1603" height="917" alt="image" src="https://github.com/user-attachments/assets/181796e0-f219-4598-a492-ba696541fb03" />
 
